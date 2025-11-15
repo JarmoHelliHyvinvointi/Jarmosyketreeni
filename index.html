@@ -21,9 +21,9 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     
-    <!-- VERSION: 1.1.0 - Debug info -->
+    <!-- VERSION: 1.2.0 - Debug info -->
     <div class="fixed top-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 z-50">
-        v1.1.0 - Käyrä keskellä & Rajat synkassa
+        v1.2.0 - Taustavärit & Tavoite päivittyvät
     </div>
     
     <!-- Profile Setup Screen -->
@@ -404,7 +404,7 @@
             
             // Try to save to localStorage, but continue even if it fails
             try {
-                localStorage.setItem('hrTrainingProfile', JSON.stringify(userProfile));
+                localStorage.setItem('hrConfigurationProfile', JSON.stringify(userProfile));
                 console.log('Profiili tallennettu:', userProfile);
             } catch (e) {
                 console.warn('localStorage ei toimi, jatketaan ilman tallennusta:', e);
@@ -1014,7 +1014,7 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
-        // Update chart - KORJATTU: Nykyinen aika keskellä, rajat synkassa
+        // Update chart - KORJATTU: Taustavärit & Tavoite päivittyvät
         function updateChart() {
             if (!hrChart) return;
             
@@ -1027,7 +1027,7 @@
                 workoutState.timeData.push(formatTime(workoutState.elapsedTime));
                 workoutState.phaseData.push(workoutState.currentPhase);
                 
-                // KORJATTU: Näytä 24 pistettä, nykyinen aika keskellä (indeksi 12)
+                // KORJATTU: Nykyinen aika keskellä (indeksi 12)
                 const visibleCount = 24;
                 let startIndex = Math.max(0, currentIndex - Math.floor(visibleCount / 2));
                 let endIndex = startIndex + visibleCount;
@@ -1052,12 +1052,15 @@
                     hrChart.data.datasets[hrDatasetIndex].data = visibleData;
                 }
                 
-                // KORJATTU: Rajat synkassa - käytä slicea
+                // KORJATTU: Rajat & Tavoite päivittyvät - käytä slicea
                 const lowerDatasetIndex = hrChart.data.datasets.findIndex(ds => ds.label === 'Alaraja');
                 const upperDatasetIndex = hrChart.data.datasets.findIndex(ds => ds.label === 'Yläraja');
-                if (lowerDatasetIndex !== -1 && upperDatasetIndex !== -1) {
+                const targetDatasetIndex = hrChart.data.datasets.findIndex(ds => ds.label === 'Tuleva suunnitelma');
+                
+                if (lowerDatasetIndex !== -1 && upperDatasetIndex !== -1 && targetDatasetIndex !== -1) {
                     hrChart.data.datasets[lowerDatasetIndex].data = workoutState.fullLowerPlan.slice(startIndex, endIndex);
                     hrChart.data.datasets[upperDatasetIndex].data = workoutState.fullUpperPlan.slice(startIndex, endIndex);
+                    hrChart.data.datasets[targetDatasetIndex].data = workoutState.fullWorkoutPlan.map(p => p.targetHR).slice(startIndex, endIndex);
                 }
                 
                 // Päivitä x-akselin labelit
