@@ -437,6 +437,7 @@ function generateWorkoutPlan() {
     workoutState.planTimeData = timeLabels;
     workoutState.fullLowerPlan = lowerPlan;
     workoutState.fullUpperPlan = upperPlan;
+    workoutState.totalWorkoutTime = totalSeconds; // LISÄÄ TÄMÄ RIVI
 }
 
 // Pause or resume workout
@@ -1235,4 +1236,5 @@ window.onload = function() {
     } catch (error) {
         console.error('VIRHE alustuksessa:', error);
     }
+
 };
