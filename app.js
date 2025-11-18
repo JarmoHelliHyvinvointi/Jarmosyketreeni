@@ -437,7 +437,7 @@ function generateWorkoutPlan() {
     workoutState.planTimeData = timeLabels;
     workoutState.fullLowerPlan = lowerPlan;
     workoutState.fullUpperPlan = upperPlan;
-     workoutState.totalWorkoutTime = totalSeconds; // TÄMÄ PUUTTUI
+    workoutState.totalWorkoutTime = totalSeconds; // TÄMÄ PUUTTUI
 }
 
 // Pause or resume workout
@@ -1238,3 +1238,4 @@ window.onload = function() {
     }
 
 };
+
