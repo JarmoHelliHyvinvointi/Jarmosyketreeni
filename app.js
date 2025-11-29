@@ -196,43 +196,49 @@ function loadProfile() {
     }
 }
 
-// Save profile without console.log and alert
+// DEBUG-versio: tallennus + pakotettu siirtyminen asetuksiin
 function saveProfile() {
     const maxHRInput = document.getElementById('maxHR');
     const restHRInput = document.getElementById('restHR');
     const fitnessLevelSelect = document.getElementById('fitnessLevel');
     const zoneWidthInput = document.getElementById('zoneWidth');
     const errorMsg = document.getElementById('profileError');
-    
+
+    // Tarkistetaan että elementit löytyvät
     if (!maxHRInput || !restHRInput || !fitnessLevelSelect || !zoneWidthInput) {
+        alert('DEBUG: profiilin syötekenttiä ei löytynyt.');
         return;
     }
-    
+
     const maxHR = parseInt(maxHRInput.value);
     const restHR = parseInt(restHRInput.value) || 60;
     const fitnessLevel = fitnessLevelSelect.value;
     const zoneWidth = parseInt(zoneWidthInput.value) || 10;
-    
-    if (!maxHR || maxHR < 100 || maxHR > 250) {
-        if (errorMsg) {
-            errorMsg.textContent = 'Syötä kelvollinen maksimisyke (100-250 bpm)';
-            errorMsg.classList.remove('hidden');
-        }
-        return;
-    }
-    
-    if (errorMsg) {
-        errorMsg.classList.add('hidden');
-    }
-    
-    userProfile = { maxHR, restHR, fitnessLevel, zoneWidth };
-    
+
+    // Näytä mitä arvoja selaimessa oikeasti on
+    alert(
+        'DEBUG: saveProfile kutsuttiin\n' +
+        'maxHR = ' + maxHR + '\n' +
+        'restHR = ' + restHR + '\n' +
+        'fitnessLevel = ' + fitnessLevel + '\n' +
+        'zoneWidth = ' + zoneWidth
+    );
+
+    // OHITETAAN VALIDOINNIT TÄSSÄ VAIHEESSA, jotta nähdään päästäänkö eteenpäin
+    userProfile = {
+        maxHR: maxHR || 180,
+        restHR,
+        fitnessLevel,
+        zoneWidth
+    };
+
     try {
         localStorage.setItem('hrTrainingProfile', JSON.stringify(userProfile));
     } catch (e) {
-        // Jatketaan vaikka tallennus epäonnistuisi
+        // ei haittaa, jatketaan silti
     }
-    
+
+    // Pakotetaan siirtyminen treenin asetuksiin
     showWorkoutSetupScreen();
 }
 
@@ -900,5 +906,6 @@ function updateTargetZone() {
     workoutState.targetLower = zone.lower;
     workoutState.targetUpper = zone.upper;
 }
+
 
 // 
